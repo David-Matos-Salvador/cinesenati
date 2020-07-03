@@ -1,0 +1,295 @@
+drop database if exists bdcine;
+create database if not exists bdcine;
+use bdcine;
+
+create table actores
+(idActores char(5) primary key,
+apellidos varchar(25),
+nombres varchar(25),
+imagen varchar(20));
+ 
+
+create table actorporpelicula
+(idActores char(5),
+idPelicula char(5),
+idActorPorPelicula char(5),
+rol varchar(50));
+ 
+
+create table distribuidores
+(idDistribuidores int not null primary key,
+nombres varchar(50));
+ 
+
+create table distribuidoresporpelicula
+(idPelicula char(5),
+idDistribuidores int not null);
+ 
+
+create table reservaasientos
+(usuario int not null primary key,
+idAsientos int not null,
+estado int not null);
+ 
+
+create table asientos
+(idAsientos int not null primary key,
+idSala char(5),
+fila int not null,
+columna int not null);
+ 
+
+create table salas
+(idSala char(5) primary key,
+cantFilas int not null,
+cantColumnas int not null,
+imagen BLOB);
+ 
+
+create table proyecciones
+(idProyecciones int not null primary key,
+idSala char(5),
+hora varchar(8),
+idCopia int not null);
+ 
+
+create table horafecha
+(hora varchar(8) primary key,
+fechar varchar(10));
+  
+
+create table copiadepelicula
+(idCopia int not null primary key,
+idFormatoPelicula int not null,
+idPelicula int not null);
+  
+create table formatoporpelicula
+(idFormatopelicula int not null primary key,
+idvideo int not null,
+idaudio int not null);
+
+
+create table formatovideo
+(idvideo int not null primary key,
+descripcion varchar(50));
+
+create table peliculas
+(idPelicula char(5) not null primary key,
+nombre varchar(50),
+duracion varchar(4),
+estreno DATE,
+idclasificacion int not null,
+sinopsis varchar(800),
+imagen varchar(5));
+
+
+create table productoraporpelicula
+(idProductora int not null,
+idpelicula char(5) not null);
+
+create table productora
+(idProductora int not null primary key,
+productora varchar(11));
+
+create table clasificacionpelicula
+(idClasificacion int not null primary key,
+Detalles varchar(50));
+
+
+create table formatoaudio
+(idaudio int not null  primary key,
+descripcion varchar(50));
+
+create table generoporpelicula
+(idGenero int not null,
+idPelicula char(5) not null);
+  
+create table generodepelicula
+(idGenero int not null primary key,
+descripcion varchar(50));
+ 
+
+create table directorporpelicula
+(idDirector int not null,
+idPelicula char(5) not null);
+ 
+
+create table directores
+(idDirector int not null primary key,
+Apellidos varchar(30),
+Nombres varchar(30),
+imagen BLOB);
+ 
+
+alter table actorporpelicula
+add constraint R_PELICULASACTORPORPELICULA
+foreign key(idPelicula)
+references peliculas(idPelicula);
+
+describe actorporpelicula;
+
+
+alter table actorporpelicula 
+add constraint R_ACTORESPORPELICULA
+foreign key(idActores)
+references actores(idActores);
+
+
+describe actores;
+
+alter table distribuidoresporpelicula
+add constraint R_DISTRIBUIDOPELICULA
+foreign key(idDistribuidores)
+references distribuidores(idDistribuidores);
+
+describe distribuidoresporpelicula;
+
+alter table reservaasientos
+add constraint R_RESVAASIENTO
+foreign key(idAsientos)
+references asientos(idAsientos);
+
+describe reservaasientos;
+
+alter table asientos
+add constraint R_ASIENTOSALA
+foreign key(idSala)
+references salas(idSala);
+
+describe asientos;
+
+alter table generoporpelicula
+add constraint R_GENEROPELICULAS
+foreign key(idPelicula)
+references peliculas(idPelicula);
+
+describe generoporpelicula;
+
+alter table proyecciones
+add constraint R_HORAPROYECION
+foreign key(hora)
+references horafecha(hora);
+
+describe proyecciones;
+
+alter table formatoporpelicula
+add constraint R_FORMATOS
+foreign key(idvideo)
+references formatovideo(idvideo);
+
+describe formatoporpelicula;
+
+alter table proyecciones
+add constraint R_COPIAPROYECCION
+foreign key(idCopia)
+references copiadepelicula(idCopia);
+
+alter table copiadepelicula
+add constraint  R_COPIAFORMATOS
+foreign key(idFormatoPelicula)
+references formatoporpelicula(idFormatoPelicula);
+
+describe copiadepelicula;
+
+describe proyecciones;
+
+alter table distribuidoresporpelicula
+add constraint R_PELICULASDISTRIBUIDORAS
+foreign key(idPelicula)
+references peliculas(idPelicula);
+
+describe distribuidoresporpelicula;
+
+alter table formatoporpelicula
+add constraint R_FORMATOS2
+foreign key(idaudio)
+references formatoaudio(idaudio);
+
+describe formatoporpelicula;
+
+alter table productoraporpelicula
+add constraint R_PRODUCTORAS
+foreign key(idProductora)
+references productora(idProductora);
+
+describe productoraporpelicula;
+
+alter table directorporpelicula
+add constraint R_DIRECTORESRELACION
+foreign key(idDirector)
+references directores (idDirector);
+
+describe directorporpelicula;
+
+alter table generoporpelicula
+add constraint R_GENEROS
+foreign key(idGenero)
+references generodepelicula(idGenero);
+
+describe generoporpelicula;
+
+alter table generoporpelicula
+add constraint R_GENEROPELICULA
+foreign key(idPelicula)
+references peliculas (idPelicula);
+
+describe generoporpelicula;
+
+alter table proyecciones
+add constraint R_SALAPRO
+foreign key (idSala)
+references salas(idSala);
+
+
+ 
+alter table directorporpelicula
+add constraint R_DIRECTORPELICULA
+foreign key(idPelicula)
+references peliculas (idPelicula);
+
+describe directorporpelicula;
+
+
+alter table peliculas
+add constraint R_CLASIFICAIONPELI
+foreign key (idClasificacion)
+references clasificacionpelicula(idClasificacion);
+
+describe peliculas;
+INSERT INTO clasificacionpelicula 
+(idClasificacion, Detalles) VALUES
+(1, 'mayores de 12 años');
+
+INSERT INTO peliculas 
+(idpelicula,nombre,duracion,estreno,
+idClasificacion,sinopsis,imagen) VALUES
+('PE001','Los Vengadores: La Era de Ultron', '2:30', '2017/12/2', 1, 'El destino del planeta pende de un hilo cuando Tony Stark','PE001');
+
+INSERT INTO actores (idActores, apellidos, nombres, imagen) 
+VALUES
+('AC001', 'Downey, Jr.', 'Robert ', 'AC001.jpg'),
+('AC002', 'Evans', 'Chris ', 'AC002.jpg'),
+('AC003', 'Olsen', 'Elizabeth ', 'AC003.jpg');
+  
+INSERT INTO actorporpelicula 
+(idActores, idPelicula, idActorPorPelicula, rol) VALUES
+('AC001', 'PE001', 'AP001', ''),
+('AC002', 'PE001', 'AP002', ''),
+('AC003', 'PE001', 'AP003', '');  
+INSERT INTO formatoaudio (idaudio, descripcion) VALUES
+(1, 'idioma original'),
+(2, 'idioma original con subtitulo'),
+(3, 'traducida a español');  
+
+INSERT INTO formatovideo(idvideo, descripcion) VALUES
+(1, '2D'),
+(2, '3D');  
+INSERT INTO formatoporpelicula
+(idFormatopelicula, idvideo, idaudio) 
+VALUES(1, 1, 1); 
+INSERT INTO directores (idDirector, Apellidos,Nombres,imagen) VALUES
+(1, 'Whedon', 'Joss ', '');  
+INSERT INTO directorporpelicula (idDirector, idPelicula) VALUES
+(1, 'PE001');  
+INSERT INTO distribuidores (idDistribuidores, nombres) VALUES
+(1, 'Walt Disney Studios Motion Pictures');
