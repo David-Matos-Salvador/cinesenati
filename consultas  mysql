@@ -1,0 +1,8 @@
+
+👍 select D.iddirector,D.nombres,D.apellidos 
+from directores D 
+	join directorporpelicula DP 
+		on D.iddirector=DP.iddirector
+	join peliculas P 
+		on DP.idpelicula=P.idpelicula 
+	where P.idpelicula=XXX;
